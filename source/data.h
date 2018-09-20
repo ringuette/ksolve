@@ -30,7 +30,7 @@ static const int TYPE_PURE = 3;    // Data to orient which does not permute
 // Max size table for one set of pieces. Size in number of elements, not actual bytes.
 static const int MAX_COMPLETE_PERMUTATION_TABLE_SIZE = 10000000; // >10! (perm of 10 pieces)
 static const int MAX_COMPLETE_ORIENTATION_TABLE_SIZE = 10000000; // Complete tables contain one int (4 byte) per entry.
-static const int MAX_PARTIAL_PERMUTATION_TABLE_SIZE = 1000000; // Max number of entries in a partial table.
+static const int MAX_PARTIAL_PERMUTATION_TABLE_SIZE = 12000000; // Max number of entries in a partial table.
 static const int MAX_PARTIAL_ORIENTATION_TABLE_SIZE = 1000000; // SIZE is number of entries.
 
 // The types of pruning tables. 
@@ -60,19 +60,12 @@ struct substate {
 };
 
 
-// Partial pruning tables now use hashtables, not std::Map.   10x speedup when used.
-// I use gp_hash_table, but unordered_map would have been OK too.  -- Marc Ringuette, Sept 2018
-
-struct vec_long_long_hash {
-	int operator()(std::vector<long long> x) const { return std::_Hash_bytes((void *)&x[0], x.size()*sizeof(long long), 0x5bd1e995); }
-};
-
 // part of a pruning table
 struct subprune{
 	std::vector<char> orientation;
 	std::vector<char> permutation;
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> partialorientation;
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> partialpermutation;
+	PARTIAL_TABLE_CONTAINER_TYPE partialorientation;
+	PARTIAL_TABLE_CONTAINER_TYPE partialpermutation;
 	int partialpermutation_depth;
 	int partialorientation_depth;
 };

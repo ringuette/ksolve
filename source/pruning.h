@@ -198,7 +198,7 @@ static PruneTable getCompletePruneTables(Position solved, MoveList moves, PieceT
 				int tmp_size = table[iter].partialpermutation.size();
 				fout.write((char*) (&tmp_size), sizeof(tmp_size));
 				
-				__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash>::iterator tmp_iter;
+				PARTIAL_TABLE_CONTAINER_TYPE::iterator tmp_iter;
 				tmp_iter = table[iter].partialpermutation.begin();
 				// Key size
 				tmp_size = tmp_iter->first.size();
@@ -225,7 +225,7 @@ static PruneTable getCompletePruneTables(Position solved, MoveList moves, PieceT
 				int tmp_size = table[iter].partialorientation.size();
 				fout.write((char*) (&tmp_size), sizeof(tmp_size));
 
-				__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash>::iterator tmp_iter;
+				PARTIAL_TABLE_CONTAINER_TYPE::iterator tmp_iter;
 				tmp_iter = table[iter].partialorientation.begin();
 				// Key size
 				tmp_size = tmp_iter->first.size();
@@ -556,12 +556,12 @@ static std::vector<char> buildCompletePermutationPruningTable3(std::vector<int> 
 	return table;
 }
 
-static __gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> buildPartialOrientationPruningTable(std::vector<int> solved, MoveList moves, int setname, int omod, std::vector<int> ignore)
+static PARTIAL_TABLE_CONTAINER_TYPE buildPartialOrientationPruningTable(std::vector<int> solved, MoveList moves, int setname, int omod, std::vector<int> ignore)
 {
 	std::cout << "Building partial pruning table for " << setnameFromIndex(setname) << " orientation.\n";
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> table;
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> old_table;
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash>::iterator iter2;
+	PARTIAL_TABLE_CONTAINER_TYPE table;
+	PARTIAL_TABLE_CONTAINER_TYPE old_table;
+	PARTIAL_TABLE_CONTAINER_TYPE::iterator iter2;
 	MoveList::iterator iter;
 
 	table[packVector(solved)] = 0; // Put solved position in table
@@ -607,13 +607,13 @@ static __gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_has
 }
 
 
-static __gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> buildPartialPermutationPruningTable(std::vector<int> solved, MoveList moves, int setname, std::vector<int> ignore)
+static PARTIAL_TABLE_CONTAINER_TYPE buildPartialPermutationPruningTable(std::vector<int> solved, MoveList moves, int setname, std::vector<int> ignore)
 {
 	std::cout << "Building partial pruning for " << setnameFromIndex(setname) << " permutation.\n";
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> table;
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> old_table;
+	PARTIAL_TABLE_CONTAINER_TYPE table;
+	PARTIAL_TABLE_CONTAINER_TYPE old_table;
 
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash>::iterator iter2;
+	PARTIAL_TABLE_CONTAINER_TYPE::iterator iter2;
 	MoveList::iterator iter;
 
 	std::vector<long long> first_key = packVector(solved);
@@ -685,9 +685,9 @@ static __gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_has
 	return table;
 }
 
-static int maxDepth(__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> table){
+static int maxDepth(PARTIAL_TABLE_CONTAINER_TYPE table){
 	int maxdepth = 0;
-	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash>::iterator iter;
+	PARTIAL_TABLE_CONTAINER_TYPE::iterator iter;
 	for (iter = table.begin(); iter != table.end(); iter++)
 		if (maxdepth < iter->second)
 			maxdepth = iter->second;                     

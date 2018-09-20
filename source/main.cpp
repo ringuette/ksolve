@@ -34,7 +34,41 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
+
+
+#define PARTIAL_TABLE_CONTAINER map
+// #define PARTIAL_TABLE_CONTAINER unordered_map  // doesn't work properly yet
+// #define PARTIAL_TABLE_CONTAINER gp_hash_table
+
+#if PARTIAL_TABLE_CONTAINER == map
+#define PARTIAL_TABLE_CONTAINER_TYPE std::map<std::vector<long long>, char>
+#elif PARTIAL_TABLE_CONTAINER == unordered_map
+#include <unordered_map>
+namespace std {
+  template <>
+  struct hash<vector<long long>>
+  {
+    size_t operator()(const vector<long long>& k) const {
+    	long long h=0x5bd1e995;
+    	for (int j=k.size()-1; j>=0; --j) 
+    		h=0x5bd1e995*(h+k[j]); 
+    	return h;
+    }
+  };
+}
+#define PARTIAL_TABLE_CONTAINER_TYPE std::unordered_map<std::vector<long long>, char>  // results end up wrong; either hash or equality is still broken
+#elif defined(__GLIBCXX__)
 #include <ext/pb_ds/assoc_container.hpp>
+struct vec_long_long_hash {
+	int operator()(const std::vector<long long> x) const { 
+		return std::_Hash_bytes((void *)&x[0], x.size()*sizeof(long long), 0x5bd1e995); 
+	}
+};
+#define PARTIAL_TABLE_CONTAINER_TYPE __gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash>
+#else
+#error Error: gp_hash_table requires G++ and the policy based data structures library
+#endif
+
 
 std::map<std::string, int> setnameLookup ;
 std::vector<std::string> setNames ;
