@@ -23,12 +23,14 @@
 #define SEARCH_H
 
 static bool treeSolve(Position state, Position& solved, MoveList& moves, PieceTypes& datasets, PruneTable& prunetables, std::set<MovePair>& forbiddenPairs, Position& ignore, std::vector<Block>& blocks, int depth, int metric, std::vector<MoveLimit>& moveLimits, string sequence, int old_move, bool splitThreads){
-	// if we ran out of depth, it's either solved or not
-	if (depth <= 0) {
+	// if we ran out of depth or results to find, it's either solved or not
+	if (depth <= 0 || solutionCountMain>=maxResultsMain) {
 		if (isSolved(state, solved, ignore, datasets)){
-            #pragma omp critical
-            {
-                std::cout << sequence << "\n";
+            if (++solutionCountMain<=maxResultsMain) {
+                #pragma omp critical
+                {
+                    std::cout << sequence << "\n";
+                }
             }
 			return true;
 		} else {
@@ -37,7 +39,7 @@ static bool treeSolve(Position state, Position& solved, MoveList& moves, PieceTy
 	}
 
 	// use pruning tables to see if we don't have enough depth left
-	if (prune(state, depth, datasets, prunetables))
+	if (skipPrune || prune(state, depth, datasets, prunetables))
 		return false;
 
 	// define variables; initialize room for a new state

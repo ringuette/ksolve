@@ -22,10 +22,10 @@
 #ifndef PRUNING_H
 #define PRUNING_H
 
-static PruneTable getCompletePruneTables(Position solved, MoveList moves, PieceTypes datasets, Position ignore, string filename, bool usePruneTable)
+static PruneTable getCompletePruneTables(Position solved, MoveList moves, PieceTypes datasets, Position ignore, string filename, string suffix, bool usePruneTable)
 {
 	PruneTable table;
-	string filename2 = filename + ".tables";
+	string filename2 = filename + suffix + ".tables";
 	std::ifstream fin;
 	fin.open(filename2.c_str(), std::ios::in | std::ios::binary);
 	
@@ -584,7 +584,7 @@ static PARTIAL_TABLE_CONTAINER_TYPE buildPartialOrientationPruningTable(std::vec
 						table[newpos] = len + 1;
 						c++;
 						tot_c++;
-						if (tot_c >= MAX_PARTIAL_ORIENTATION_TABLE_SIZE){
+						if (tot_c >= partOsize){
 							abort = true;
 							break;
 						}
@@ -663,7 +663,7 @@ static PARTIAL_TABLE_CONTAINER_TYPE buildPartialPermutationPruningTable(std::vec
 						table[newpos] = len + 1;
 						c++;
 						tot_c++;
-						if (tot_c >= MAX_PARTIAL_PERMUTATION_TABLE_SIZE){
+						if (tot_c >= partPsize){
 							abort = true;
 							break;
 						}

@@ -30,7 +30,7 @@ static const int TYPE_PURE = 3;    // Data to orient which does not permute
 // Max size table for one set of pieces. Size in number of elements, not actual bytes.
 static const int MAX_COMPLETE_PERMUTATION_TABLE_SIZE = 10000000; // >10! (perm of 10 pieces)
 static const int MAX_COMPLETE_ORIENTATION_TABLE_SIZE = 10000000; // Complete tables contain one int (4 byte) per entry.
-static const int MAX_PARTIAL_PERMUTATION_TABLE_SIZE = 12000000; // Max number of entries in a partial table.
+static const int MAX_PARTIAL_PERMUTATION_TABLE_SIZE = 1000000; // Max number of entries in a partial table.
 static const int MAX_PARTIAL_ORIENTATION_TABLE_SIZE = 1000000; // SIZE is number of entries.
 
 // The types of pruning tables. 

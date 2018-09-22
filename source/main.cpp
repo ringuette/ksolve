@@ -85,6 +85,12 @@ std::string setnameFromIndex(int i) {
    return setNames[i] ;
 }
 long long maxmem = 8000000000LL ;
+long long partPsize, partOsize;
+std::string nameSuffix = "";
+int maxDepthMain=999;
+int solutionCountMain=0;
+int maxResultsMain=999;
+int skipPrune=0;
 int verbose = 0 ;
 
 struct ksolve {
@@ -102,13 +108,19 @@ struct ksolve {
 	static int ksolveMain(int argc, char *argv[]) {
 
 		srand(time(NULL)); // initialize RNG in case we need it
+		partPsize = MAX_PARTIAL_PERMUTATION_TABLE_SIZE;
+		partOsize = MAX_PARTIAL_ORIENTATION_TABLE_SIZE;
 		while (argc > 3 && argv[1][0] == '-') {
 			argc-- ;
 			argv++ ;
 			switch (argv[0][1]) {
-case 'M': maxmem = 1048576 * atoll(argv[1]) ; argc-- ; argv++ ; break ;
-case 'v': verbose++ ; break ;
-default: std::cout << "Did not understand argument " << argv[0] << std::endl ;
+				case 'd': maxDepthMain = atoi(argv[1]) ; argc-- ; argv++ ; break ;
+				case 'r': maxResultsMain = atoi(argv[1]) ; argc-- ; argv++ ; break ;
+				case 'M': maxmem = 1048576 * atoll(argv[1]) ; argc-- ; argv++ ; break ;
+				case 'P': partPsize = partOsize = 1048576 * atoll(argv[1]) ; nameSuffix = (std::string)"_"+argv[1]+"M"; argc-- ; argv++ ; break ;
+				case 'p': skipPrune++ ; break;
+				case 'v': verbose++ ; break ;
+				default: std::cout << "Did not understand argument " << argv[0] << std::endl ;
 			}
 		}
 		if (argc != 3){
@@ -172,8 +184,10 @@ default: std::cout << "Did not understand argument " << argv[0] << std::endl ;
 
 		// Compute or load the pruning tables
 		PruneTable tables;
-		tables = getCompletePruneTables(solved, moves, datasets, ignore, defFileName, usePruneTable);
-		std::cout << "Pruning tables loaded.\n";
+		if (!skipPrune) {
+			tables = getCompletePruneTables(solved, moves, datasets, ignore, defFileName, nameSuffix, usePruneTable);
+			std::cout << "Pruning tables loaded.\n";
+		} else std::cout << "Pruning tables skipped!\n";
 
 		//datasets = updateDatasets(datasets, tables);
 		updateDatasets(datasets, tables);
@@ -207,7 +221,6 @@ default: std::cout << "Did not understand argument " << argv[0] << std::endl ;
 			std::cout << "\nSolving " << scramble.name.c_str() << "\n";
 
 			if (scramble.printState == 1) {
-				std::cout << "Scramble position:\n";
 				printPosition(scramble.state);
 			}
 
@@ -236,11 +249,15 @@ default: std::cout << "Did not understand argument " << argv[0] << std::endl ;
 			}
 			processMoveLimits(moves2, scramble.moveLimits);
 
-			std::cout << "Depth 0\n";
+			std::cout << "Depth 0, time to here " << (clock() - start) / (double)CLOCKS_PER_SEC << "s\n";
+			clock_t start2 = clock();
+
 
 			// The tree-search for the solution(s)
 			int usedSlack = 0;
-			while(1) {
+			solutionCountMain=0;
+			while(solutionCountMain<maxResultsMain) {
+				solutionCountMain=0;
 				bool foundSolution = treeSolve(scramble.state, solved, moves, datasets, tables, forbidden, scramble.ignore, blocks, depth, scramble.metric, scramble.moveLimits, temp_a, -1, true);
 				if (foundSolution || usedSlack > 0) {
 					usedSlack++;
@@ -251,14 +268,14 @@ default: std::cout << "Did not understand argument " << argv[0] << std::endl ;
 					std::cout << "\nMax depth reached, aborting.\n";
 					break;
 				}
-				std::cout << "Depth " << depth << "\n";
+				std::cout << "Depth " << depth << ", time " << (clock() - start2) / (double)CLOCKS_PER_SEC << "s\n";
 			}
 			std::cout << "\n";
 
 			scramble = states.getScramble();
 		}
 
-		std::cout << "Time: " << (clock() - start) / (double)CLOCKS_PER_SEC << "s\n";
+		std::cout << "Total time: " << (clock() - start) / (double)CLOCKS_PER_SEC << "s\n";
 
 		return EXIT_SUCCESS;
 	}

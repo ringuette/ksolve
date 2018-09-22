@@ -27,7 +27,7 @@ class Scramble
 public:
 	Scramble(std::istream &fin, Position& solved, MoveList& moves, PieceTypes datasets, std::vector<Block>& blocks){
 		sent = 0;
-		int current_max = 999;
+		int current_max = maxDepthMain;
 		int current_slack = 0;
 		int current_metric = 0;
 		Position state(solved.size());
@@ -175,6 +175,7 @@ public:
 				if (name.size() >= 1) name = name.substr(1);
 				
 				// initialize state to solved, and ignore to empty
+				int skipped=0;
 				state.clear();
 				ignore.clear();
 				state.resize(datasets.size()) ;
@@ -202,8 +203,7 @@ public:
 				}
 					
 				string movename;
-				fin >> movename;
-				while(movename != "End"){
+				for(fin >> movename ; movename != "End"; fin >> movename){
 					if (fin.fail()) {
 						std::cerr << "Error reading scramble " << name << ".\n";
 						exit(-1);
@@ -211,8 +211,12 @@ public:
 					
 					// apply move called movename to solved, if possible
 					if (!moveIn(movename, moves)) {
-						std::cerr << "Move " << movename << " in scramble " << name << " is unknown.\n";
-						exit(-1);
+						if (!skipped) {
+							std::cerr << "Move " << movename << " in scramble " << name << " is unknown.  Skipping.\n";
+							name += " (skipped some moves)";
+							skipped=1;
+						}
+						continue;
 					}
 					
 					if (blocks.size() != 0) {
@@ -231,8 +235,6 @@ public:
 							state[iter->first].orientation[i] = new_state[iter->first].orientation[i];
 						}
 					}
-				
-					fin >> movename;
 				}
 				
 				ScrambleDef scramble;
