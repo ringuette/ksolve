@@ -1,6 +1,41 @@
-                      ksolve+ v1.3a
+                      ksolve+ v1.3m
+
                      (c)  2007-2013
             by Kare Krig and Michael Gottlieb
+
+      2018 updates by Tomas Rokicki and Marc Ringuette
+
+
+
+##### New stuff in 2018 #####
+
+From Marc Ringuette, Sept 2018:  
+
+New command line flags:
+   -d nn       limit depth
+   -r nn       max results to generate per scramble
+   -p          don't use pruning tables at all in this run
+   -P nn       set partial pruning table sizes to this many megabytes.  
+               A separate pruning tables file is saved for each nn.
+   -M nn       set max memory to this many megabytes (this one was Tom's change).
+
+
+Example: ./ksolve -d 14 -r 5 -P 12 foo.def bar.scr    (produces file foo.def_12M.tables)
+
+Other:  Two small but nasty bug fixes.  Cygwin behavior improved.  Random conveniences.
+
+
+
+From Tomas Rokicki, summer 2018: 
+   Quite a bit of bug fixing and tweaking relating to performance on big machines.
+   Improved God's Number calcs.
+
+
+
+The rest of this README is vintage 2013.   It should all still be applicable.
+I renamed from 1.3a to 1.3m because it has been such a long long time.  This is not
+exactly an official version, but it needs a different name regardless.     --Marc R.
+
 
 ###### Contents ######
 
@@ -275,6 +310,7 @@ It is possible to define all of the centers together as one piece group in this 
 ###### Version History ######
 
 (ksolve+)
+1.3x Command line flags -d, -r, -p, -P ; bug fixes; performance and God's Alg.
 1.3a Ported program to Linux -Matt S. and cubizh
 1.3  Optimized indexing code for non-unique permutations
      Changed data structure for moves, speeds everything up
