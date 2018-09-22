@@ -45,6 +45,8 @@ public:
 			// Scramble - read a single scramble's definition
 			if (command == "Scramble"){
 				getline(fin, name);
+				const char* t = " \t\n\r\f\v";
+				name.erase(name.find_last_not_of(t) + 1);
 				if (name.size() >= 1) name = name.substr(1);
 			 
 				string setname, tmpStr;
@@ -168,6 +170,8 @@ public:
 			// ScrambleAlg - read a scramble as a set of moves
 			else if (command == "ScrambleAlg"){
 				getline(fin, name);
+				const char* t = " \t\n\r\f\v";
+				name.erase(name.find_last_not_of(t) + 1);
 				if (name.size() >= 1) name = name.substr(1);
 				
 				// initialize state to solved, and ignore to empty
@@ -248,6 +252,8 @@ public:
 			// RandomScramble - read a scramble as a set of moves
 			else if (command == "RandomScramble"){
 				getline(fin, name);
+				const char* t = " \t\n\r\f\v";
+				name.erase(name.find_last_not_of(t) + 1);
 				if (name.size() >= 1) name = name.substr(1);
 				
 				// initialize state to solved, and ignore to empty

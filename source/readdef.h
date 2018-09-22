@@ -35,6 +35,8 @@ public:
 				}
 				if (command == "Name"){
 					getline(fin, name);
+					const char* t = " \t\n\r\f\v";
+					name.erase(name.find_last_not_of(t) + 1);
 				}
 				else if (command == "Set"){
 					string setname;
