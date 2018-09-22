@@ -5,12 +5,14 @@ JS_MEMORY = -s TOTAL_MEMORY=536870912
 JS_USE_ASM_JS = 1
 JS_FUNCTIONS = "['_solve']"
 
-all: ksolve js
+all: ksolve
+
 
 # Use GCC for OpenMP support (parallelization), since clang doesn't support it.
 # Need to specify GCC version to avoid triggering clang on OSX. :-(
-ksolve:
-	g++ -o ksolve -O3 -fopenmp ./source/main.cpp
+ksolve: source/main.cpp source/blocks.h source/checks.h source/data.h source/god.h source/indexing.h source/move.h source/pruning.h source/readdef.h source/readscramble.h source/search.h
+	g++ -o ksolve -O3 -fopenmp source/main.cpp
+
 
 .PHONY: js
 js:
