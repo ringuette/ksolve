@@ -13,14 +13,14 @@ From Marc Ringuette, Sept 2018:
 
 New command line flags:
    -d nn       limit depth
-   -r nn       max results to generate per scramble
+   -c nn       count of max results to generate per scramble
    -p          don't use pruning tables at all in this run
-   -P nn       set partial pruning table sizes to this many megabytes.  
+   -P nn       set partial pruning table sizes to this many megabytes.  Default 1.
                A separate pruning tables file is saved for each nn.
    -M nn       set max memory to this many megabytes (this one was Tom's change).
 
 
-Example: ./ksolve -d 14 -r 5 -P 12 foo.def bar.scr    (produces file foo.def_12M.tables)
+Example: ./ksolve -d 14 -c 5 -P 12 foo.def bar.scr    (produces file foo.def_12M.tables)
 
 Other:  Two small but nasty bug fixes.  Cygwin behavior improved.  Random conveniences.
 
@@ -310,7 +310,7 @@ It is possible to define all of the centers together as one piece group in this 
 ###### Version History ######
 
 (ksolve+)
-1.3x Command line flags -d, -r, -p, -P ; bug fixes; performance and God's Alg.
+1.3x Command line flags -d, -c, -p, -P ; bug fixes; performance and God's Alg.
 1.3a Ported program to Linux -Matt S. and cubizh
 1.3  Optimized indexing code for non-unique permutations
      Changed data structure for moves, speeds everything up

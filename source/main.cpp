@@ -115,7 +115,7 @@ struct ksolve {
 			argv++ ;
 			switch (argv[0][1]) {
 				case 'd': maxDepthMain = atoi(argv[1]) ; argc-- ; argv++ ; break ;
-				case 'r': maxResultsMain = atoi(argv[1]) ; argc-- ; argv++ ; break ;
+				case 'c': maxResultsMain = atoi(argv[1]) ; argc-- ; argv++ ; break ;
 				case 'M': maxmem = 1048576 * atoll(argv[1]) ; argc-- ; argv++ ; break ;
 				case 'P': partPsize = partOsize = 1048576 * atoll(argv[1]) ; nameSuffix = (std::string)"_"+argv[1]+"M"; argc-- ; argv++ ; break ;
 				case 'p': skipPrune++ ; break;
@@ -124,7 +124,7 @@ struct ksolve {
 			}
 		}
 		if (argc != 3){
-			std::cerr << "ksolve+ v1.3a - Linux Port by Matt Stiefel\n";
+			std::cerr << "ksolve+ v1.3m - 2018 Edition\n";
 			std::cerr << "(c) 2007-2013 by Kare Krig and Michael Gottlieb\n";
 			std::cerr << "Usage: ksolve [def-file] [scramble-file]\n";
 			std::cerr << "See readme for additional help.\n";
