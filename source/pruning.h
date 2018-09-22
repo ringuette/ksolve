@@ -576,7 +576,7 @@ static PARTIAL_TABLE_CONTAINER_TYPE buildPartialOrientationPruningTable(std::vec
 		c = 0;
 		for (iter2 = table.begin(); iter2 != table.end(); iter2++){
 			if (iter2->second == len && !abort){
-				std::vector<int> pos = unpackVector(iter2->first);
+				std::vector<int> pos = unpackVector(iter2->first, solved.size());
 				for (iter = moves.begin(); iter != moves.end(); iter++){
 					std::vector<int> q = applySubmoveO(pos, iter->second.state[setname].orientation, iter->second.state[setname].permutation, iter->second.state[setname].size, omod);
 					std::vector<long long> newpos = packVector(q);
@@ -655,7 +655,7 @@ static PARTIAL_TABLE_CONTAINER_TYPE buildPartialPermutationPruningTable(std::vec
 		c = 0;
 		for (iter2 = table.begin(); iter2 != table.end(); iter2++){
 			if (iter2->second == len && !abort){
-				std::vector<int> pos = unpackVector(iter2->first);
+				std::vector<int> pos = unpackVector(iter2->first, solved.size());
 				for (iter = moves.begin(); iter != moves.end(); iter++){
 					std::vector<int> q = applySubmoveP(pos , iter->second.state[setname].permutation, iter->second.state[setname].size);
 					std::vector<long long> newpos = packVector(q);

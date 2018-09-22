@@ -318,7 +318,7 @@ static std::vector<long long> packVector(int vec[], int size){
 	return result;
 }
 
-static std::vector<int> unpackVector(std::vector<long long> vec){
+static std::vector<int> unpackVector(std::vector<long long> vec, int newsize){
 	unsigned int size = vec.size();
 	std::vector<int> result (8*size);
 	
@@ -329,7 +329,7 @@ static std::vector<int> unpackVector(std::vector<long long> vec){
 			number = (number >> 8);
 		}
 	}
-	while(result[result.size() - 1] == 0)
+	while(result.size() > newsize)
 			result.pop_back();
 	for (int i=0; i<result.size(); i++)
            result[i]-- ;
